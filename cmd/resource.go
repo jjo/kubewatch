@@ -78,8 +78,8 @@ func configureResource(operation string, cmd *cobra.Command, conf *config.Config
 
 	// flags struct
 	flags := []struct {
-		flagStr string
-		flagVal *bool
+		resourceStr     string
+		resourceToWatch *bool
 	}{
 		{
 			"svc",
@@ -132,20 +132,20 @@ func configureResource(operation string, cmd *cobra.Command, conf *config.Config
 	}
 
 	for _, flag := range flags {
-		b, err := cmd.Flags().GetBool(flag.flagStr)
+		b, err := cmd.Flags().GetBool(flag.resourceStr)
 		if err == nil {
-			if b == true {
+			if b {
 				switch operation {
 				case "add":
-					*flag.flagVal = true
-					logrus.Infof("resource %s configured", flag.flagStr)
+					*flag.resourceToWatch = true
+					logrus.Infof("resource %s configured", flag.resourceStr)
 				case "remove":
-					*flag.flagVal = false
-					logrus.Infof("resource %s removed", flag.flagStr)
+					*flag.resourceToWatch = false
+					logrus.Infof("resource %s removed", flag.resourceStr)
 				}
 			}
 		} else {
-			logrus.Fatal(flag.flagStr, err)
+			logrus.Fatal(flag.resourceStr, err)
 		}
 	}
 
